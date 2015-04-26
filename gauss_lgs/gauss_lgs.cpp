@@ -146,7 +146,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	else{
 		cout << "FEHLGESCHLAGEN";
 		matrixAusgeben(matrix);
-		cout << "Beliebige eingabe um zu beenden...";
+		cout << "Beliebige Eingabe um zu beenden...";
 		cin >> dimension;
 		return 0;
 	}
@@ -161,7 +161,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Ergebniss des Gauss-Verfahrens:\n";
 	matrixAusgeben(matrix);
 
-	cout << "\nBeliebige eingabe um zu beenden...";
+	cout << "\nBeliebige Eingabe um zu beenden...";
 
 	int puf = 0;
 	cin >> puf;
