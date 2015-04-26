@@ -41,6 +41,15 @@ double* matrixMinus(double* a, double* b){
 	return r;
 }
 
+void tauscheZeilen(double*& a, double*& b){
+	double*c = new double[dimension+1];
+	for (int i = 0; i < dimension + 1; i++)
+		c[i] = a[i];
+	delete[] a;
+	a = b;
+	b = c;
+}
+
 void loese(double** matrix){
 	//"linkes unteres dreieck" der Matrix "nullen"
 	for (int i = 1; i < dimension; i++)	{
@@ -103,6 +112,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Matrix, welche zu loesen ist:\n";
 	matrixAusgeben(matrix);
 
+	cout << "Tauschen 1 und 2";
+	tauscheZeilen(matrix[0], matrix[1]);
+	matrixAusgeben(matrix);
 	//loesen der Matrix
 	loese(matrix);
 
