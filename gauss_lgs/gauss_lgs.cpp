@@ -50,19 +50,43 @@ void tauscheZeilen(double*& a, double*& b){
 	b = c;
 }
 
-void loese(double** matrix){
+int pivotisieren(double**& matrix){
+	for (int i = 0; i < dimension; i++){
+		if (matrix[i][i] == 0){
+			int pivot = i;
+			for (int j = i; j < dimension; j++)
+			{
+				if (abs(matrix[j][i]) > abs(matrix[pivot][i]))
+					pivot = j;
+			}
+			if (pivot != i){
+				tauscheZeilen(matrix[i], matrix[pivot]);
+			}
+			else{
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+void loese(double**& matrix){
 	//"linkes unteres dreieck" der Matrix "nullen"
 	for (int i = 1; i < dimension; i++)	{
 		for (int j = 0; j < i; j++){
 			double* a = matrix[i];
-			if ((matrix[i][j] != 0)&&(matrix[j][j] != 0)){
+			if ((matrix[i][j] != 0) && (matrix[j][j] != 0)){
 				double* b = mal(matrix[j], a[j] / matrix[j][j]);
 				matrix[i] = matrixMinus(a, b);
 				delete[] b;
 			}
+
 			//delete [] a;// a ist nur eine Referenz auf matrix[i]! 
 			//cout << "\n";
-			matrixAusgeben(matrix);
+			//matrixAusgeben(matrix);
+		}
+		if (matrix[i][i] == 0){
+			pivotisieren(matrix);
 		}
 	}
 
@@ -112,24 +136,40 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "Matrix, welche zu loesen ist:\n";
 	matrixAusgeben(matrix);
 
-	cout << "Tauschen 1 und 2";
-	tauscheZeilen(matrix[0], matrix[1]);
-	matrixAusgeben(matrix);
+	//pivotisieren der Matrix
+	cout << "Matrix wird pivotisiert...";
+	if (pivotisieren(matrix)==0)
+	{
+		cout << "ERLEDIGT";
+		matrixAusgeben(matrix);
+	}
+	else{
+		cout << "FEHLGESCHLAGEN";
+		matrixAusgeben(matrix);
+		cout << "Beliebige eingabe um zu beenden...";
+		cin >> dimension;
+		return 0;
+	}
+
 	//loesen der Matrix
+
+	cout << "Matrix wird diagonalisiert...";
 	loese(matrix);
+	cout << "ERLEDIGT\n";
 
 
 	cout << "Ergebniss des Gauss-Verfahrens:\n";
 	matrixAusgeben(matrix);
 
+	cout << "\nBeliebige eingabe um zu beenden...";
+
+	int puf = 0;
+	cin >> puf;
+
 	//Alloziiertes Array wieder freigeben;
 	for (int i = 0; i < dimension; i++)
 		delete [] matrix[i];
 	delete[] matrix;
-
-
-	cin >> dimension;
-
 
 	return 0;
 }
