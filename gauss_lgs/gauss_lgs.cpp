@@ -8,6 +8,7 @@ using namespace std;
 int dimension = 1;
 
 void matrixAusgeben(double** matrix){
+	cout << "\n";
 	for (int y = 0; y < dimension; y++){
 		for (int x = 0; x < dimension + 1; x++){
 			if (x == dimension)
@@ -42,40 +43,36 @@ double* matrixMinus(double* a, double* b){
 
 void loese(double** matrix){
 	//"linkes unteres dreieck" der Matrix "nullen"
-	for (int i = 0; i < dimension; i++)	{
+	for (int i = 1; i < dimension; i++)	{
 		for (int j = 0; j < i; j++){
 			double* a = matrix[i];
-			double* b = mal(matrix[j],matrix[i][j]/matrix[j][j]);
-			matrix[i]=matrixMinus(a,b);
-			delete [] a;
-			delete [] b;
-			cout << "\n";
+			if ((matrix[i][j] != 0)&&(matrix[j][j] != 0)){
+				double* b = mal(matrix[j], a[j] / matrix[j][j]);
+				matrix[i] = matrixMinus(a, b);
+				delete[] b;
+			}
+			//delete [] a;// a ist nur eine Referenz auf matrix[i]! 
+			//cout << "\n";
 			matrixAusgeben(matrix);
 		}
 	}
 
-	//"rechtes oberes dreieck" der Matrix "nullen"
-	for (int i = 1; i < dimension+1; i++)	{
-		for (int j = 1; j < i; j++){
-			double* a = matrix[dimension - i];
-			cout << dimension - i <<" "<< dimension - j << "/" << dimension - j <<" " <<dimension - j <<"\n";
-			cout << matrix[dimension - i][dimension - j] << "/" << matrix[dimension - j][dimension - j]<< "\n";
-			double faktor = matrix[dimension - i][dimension - j] / matrix[dimension - j][dimension - j];
-			cout << faktor << "\n";
-			double* b = mal(matrix[dimension - j], faktor);
-			matrix[dimension - i] = matrixMinus(a, b);
-			delete[] a;
-			//delete[] b;
-			cout << "\n";
-			matrixAusgeben(matrix);
+
+	//Rueckwaerts einsetzen
+	for (int i = dimension - 1; i >= 0; i--){	//dimension -2, weil dimension -1 die unterste Zeile ist, in welcher aber nichts eingesetzt werden muss/darf/kann!
+		double x = matrix[i][i];
+		double y = matrix[i][dimension];
+		for (int j = 0; j < i; j++){
+			matrix[j][dimension] = matrix[j][dimension] - y / x * matrix[j][i];
+			matrix[j][i] = 0;
 		}
 	}
 
 	// Werte auf 1 bringen
-
 	for (int i = 0; i < dimension; i++){
-		matrix[i] = mal(matrix[i] , 1/matrix[i][i]);
+		matrix[i] = mal(matrix[i], 1 / matrix[i][i]);
 	}
+
 }
 
 
